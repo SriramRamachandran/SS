@@ -68,7 +68,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Falls.jpg" />
     <Content Include="FingerPrintModule.aspx" />
+    <Content Include="Password.aspx" />
     <Content Include="QRCode.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -79,6 +81,13 @@
     </Compile>
     <Compile Include="FingerPrintModule.aspx.designer.cs">
       <DependentUpon>FingerPrintModule.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Password.aspx.cs">
+      <DependentUpon>Password.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Password.aspx.designer.cs">
+      <DependentUpon>Password.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QRCode.aspx.cs">

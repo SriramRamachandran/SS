@@ -10,6 +10,8 @@
     <form id="form1" runat="server">
     <div>
     
+        <asp:Image ID="Image1" runat="server" ImageUrl="~/Falls.jpg" />
+    
     </div>
     </form>
 </body>
