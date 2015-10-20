@@ -29,43 +29,43 @@ namespace SSWebApplication
                     byte[] byteImage = ms.ToArray();
                     imgBarCode.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(byteImage);
                 }
-                //plBarCode.Controls.Add(imgBarCode);
-                //img.
-                imagesave(code,imgBarCode);
+                plBarCode.Controls.Add(imgBarCode);
+                
+                //imagesave(code,imgBarCode);
             }
         }
 
-        protected void imagesave(string name, System.Web.UI.WebControls.Image imgs)
-        {
-            try
-            {
-                string root = Server.MapPath("~");
-                string path = "\\Images\\QRCodes" + name;
-                string originalpath = System.IO.Path.Combine(root, path);
-                //bool isExists = System.IO.Directory.Exists(Server.MapPath(@"~\\" + originalpath));
-                //if (!isExists)
-                //{
-                //    System.IO.Directory.CreateDirectory(Server.MapPath(@"~\\" + originalpath));
-                //}
-                //else
-                //{
-                //    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Already exists')", true);
-                //}
-                if (img.ImageUrl != null)
-                {
-                    MemoryStream stream = new MemoryStream();
+        //protected void imagesave(string name, System.Web.UI.WebControls.Image imgs)
+        //{
+        //    try
+        //    {
+        //        string root = Server.MapPath("~");
+        //        string path = "\\Images\\QRCodes" + name;
+        //        string originalpath = System.IO.Path.Combine(root, path);
+        //        //bool isExists = System.IO.Directory.Exists(Server.MapPath(@"~\\" + originalpath));
+        //        //if (!isExists)
+        //        //{
+        //        //    System.IO.Directory.CreateDirectory(Server.MapPath(@"~\\" + originalpath));
+        //        //}
+        //        //else
+        //        //{
+        //        //    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Already exists')", true);
+        //        //}
+        //        if (img.ImageUrl != null)
+        //        {
+        //            MemoryStream stream = new MemoryStream();
                     
-                }
+        //        }
 
-                Bitmap b = new Bitmap(Server.MapPath(originalpath));
-                System.Drawing.Image i = (System.Drawing.Image)b;
-                MemoryStream streamP = new MemoryStream();
-                i.Save(streamP, ImageFormat.Jpeg);
-                streamP.Position = 0;
-                byte[] data = new byte[streamP.Length];
-                streamP.Read(data, 0, Convert.ToInt32(streamP.Length)); 
-            }
-            catch (Exception ee) { }
-        }
+        //        Bitmap b = new Bitmap(Server.MapPath(originalpath));
+        //        System.Drawing.Image i = (System.Drawing.Image)b;
+        //        MemoryStream streamP = new MemoryStream();
+        //        i.Save(streamP, ImageFormat.Jpeg);
+        //        streamP.Position = 0;
+        //        byte[] data = new byte[streamP.Length];
+        //        streamP.Read(data, 0, Convert.ToInt32(streamP.Length)); 
+        //    }
+        //    catch (Exception ee) { }
+        //}
     }
 }
