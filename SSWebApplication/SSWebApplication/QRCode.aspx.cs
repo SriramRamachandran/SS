@@ -30,8 +30,6 @@ namespace SSWebApplication
                     imgBarCode.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(byteImage);
                 }
                 plBarCode.Controls.Add(imgBarCode);
-                
-                //imagesave(code,imgBarCode);
             }
         }
 

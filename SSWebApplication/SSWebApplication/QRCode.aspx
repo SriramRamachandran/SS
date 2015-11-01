@@ -11,7 +11,6 @@
     <asp:TextBox ID="txtCode" runat="server"></asp:TextBox>
     <asp:Button ID="btnGenerate" runat="server" Text="Generate" OnClick="btnGenerate_Click" />
     <hr />
-        <%--<asp:Image ID="img" runat="server" Width="150" Height="150" />--%>
     <asp:PlaceHolder ID="plBarCode" runat="server" />
         
     </form>
