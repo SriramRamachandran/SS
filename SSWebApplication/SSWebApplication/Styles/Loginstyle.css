@@ -35,11 +35,10 @@ a.hiddenanchor{
 }
 /** The wrapper that will contain our two forms **/
 #wrapper{
-	width: 60%;
 	right: 0px;
-	
+	float:left;
 	min-height: 560px;	
-	margin: 0px auto;	
+	margin: 50px auto;	
 	width: 500px;
 	position: relative;	
 }
@@ -113,11 +112,10 @@ input {
 
 /* all the input except submit and checkbox */
 #wrapper input:not([type="checkbox"]){
-	width: 92%;
+	width: auto;
 	margin-top: 4px;
 	padding: 10px 5px 10px 32px;	
 	border: 1px solid rgb(178, 178, 178);
-	-webkit-appearance: textfield;
 	-webkit-box-sizing: content-box;
 	  -moz-box-sizing : content-box;
 	       box-sizing : content-box;

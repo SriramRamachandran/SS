@@ -4,18 +4,45 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Data;
+using System.Data.SqlClient;
+using System.Web.Security;
+using System.Configuration;
 using QRCoder;
-using System.IO;
 using System.Drawing;
-using System.Drawing.Imaging;
-
+using System.IO;
 namespace SSWebApplication
 {
     public partial class QRCode : System.Web.UI.Page
     {
-        protected void btnGenerate_Click(object sender, EventArgs e)
+        string code = null;
+        LoginBAL objBAL = new LoginBAL();
+        protected void Page_Load(object sender, EventArgs e)
         {
-            string code = txtCode.Text;
+            if (!IsPostBack)
+            {
+                securitydiv.Visible = false;
+                LoadValues();
+                LoadDropdown();
+            }
+        }
+
+        private void LoadDropdown()
+        {
+            DataTable dt = new DataTable();
+            dt = objBAL.GetSecurityqs();
+            ddlsecurity.DataSource = dt;
+            ddlsecurity.DataTextField = "Security_qs";
+            ddlsecurity.DataBind();
+            ddlsecurity.Items.Insert(0, new ListItem("--Select--", "0"));
+        }
+        private void LoadValues()
+        {
+            DataTable dt = new DataTable();
+            dt = (DataTable)Session["dt"];
+            username.Text = dt.Rows[0]["Username"].ToString();
+            code = dt.Rows[0]["Random_No"].ToString();
+            Session["code"] = code;
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
             QRCodeGenerator.QRCode qrCode = qrGenerator.CreateQrCode(code, QRCodeGenerator.ECCLevel.H);
             System.Web.UI.WebControls.Image imgBarCode = new System.Web.UI.WebControls.Image();
@@ -33,37 +60,36 @@ namespace SSWebApplication
             }
         }
 
-        //protected void imagesave(string name, System.Web.UI.WebControls.Image imgs)
-        //{
-        //    try
-        //    {
-        //        string root = Server.MapPath("~");
-        //        string path = "\\Images\\QRCodes" + name;
-        //        string originalpath = System.IO.Path.Combine(root, path);
-        //        //bool isExists = System.IO.Directory.Exists(Server.MapPath(@"~\\" + originalpath));
-        //        //if (!isExists)
-        //        //{
-        //        //    System.IO.Directory.CreateDirectory(Server.MapPath(@"~\\" + originalpath));
-        //        //}
-        //        //else
-        //        //{
-        //        //    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Already exists')", true);
-        //        //}
-        //        if (img.ImageUrl != null)
-        //        {
-        //            MemoryStream stream = new MemoryStream();
-                    
-        //        }
 
-        //        Bitmap b = new Bitmap(Server.MapPath(originalpath));
-        //        System.Drawing.Image i = (System.Drawing.Image)b;
-        //        MemoryStream streamP = new MemoryStream();
-        //        i.Save(streamP, ImageFormat.Jpeg);
-        //        streamP.Position = 0;
-        //        byte[] data = new byte[streamP.Length];
-        //        streamP.Read(data, 0, Convert.ToInt32(streamP.Length)); 
-        //    }
-        //    catch (Exception ee) { }
-        //}
+        protected void btnSubmit_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string codes = Session["code"].ToString();
+                if (codes == TextBox1.Text)
+                {
+                    lblmsg.Text = "Authenticated Successfully";
+                    securitydiv.Visible = true;
+                }
+                else lblmsg.Text = "Type the scanned QR Code Value";
+            }
+            catch (Exception ee) { }
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            DataTable dt = new DataTable();
+            dt = (DataTable)Session["dt"];
+            if (dt.Rows.Count > 0)
+            {
+                if ((ddlsecurity.SelectedIndex == Convert.ToInt32(dt.Rows[0]["Security_ID"])) && (TextBox2.Text == dt.Rows[0]["Security_Answer"].ToString()))
+                {
+                    Label2.Text = "Security Answer Matched!!!";
+                    Response.Redirect("Default.aspx");
+                }
+                else
+                    Label2.Text = "Security Answer Not Matched!!!";
+            }
+        }
     }
 }

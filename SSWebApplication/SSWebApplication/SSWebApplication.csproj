@@ -38,6 +38,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AjaxControlToolkit, Version=15.1.1.100, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\SRIRAM-PC\AppData\Local\Microsoft\VisualStudio\12.0\Extensions\vryol2nx.ogy\AjaxControlToolkit.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="QRCoder">
       <HintPath>C:\Users\SRIRAM-PC\Downloads\QRCode\Bin\QRCoder.dll</HintPath>
@@ -60,6 +64,12 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Default.aspx" />
+    <Content Include="image1.jpg" />
+    <Content Include="lock.png" />
+    <Content Include="logout.png" />
+    <Content Include="name.png" />
+    <Content Include="Register.aspx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -72,14 +82,22 @@
     <Content Include="Login.aspx" />
     <Content Include="Password.aspx" />
     <Content Include="QRCode.aspx" />
-    <Content Include="Register.aspx" />
     <Content Include="Styles\demo.css" />
     <Content Include="Styles\Loginstyle.css" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppCode\DAL\GlobalDAL.cs" />
     <Compile Include="AppCode\DAL\LoginDAL.cs" />
+    <Compile Include="Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
     <Compile Include="FingerPrintModule.aspx.cs">
       <DependentUpon>FingerPrintModule.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

@@ -8,14 +8,11 @@ using System.Web;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using QRCoder;
-using System.IO;
-using System.Drawing;
-using System.Drawing.Imaging;
-    
+
+namespace SSWebApplication
+{
     public partial class Register : System.Web.UI.Page
     {
-
         public static string strResult = "fail";
         public const int SALT_BYTE_SIZE = 24;
         public const int HASH_BYTE_SIZE = 24;
@@ -28,16 +25,20 @@ using System.Drawing.Imaging;
         DateTime dtt;
         protected void Page_Load(object sender, EventArgs e)
         {
-            Page.MaintainScrollPositionOnPostBack = true;
-            Wizard1.PreRender += new EventHandler(Wizard1_PreRender);
-            //if (Request["__EVENTTARGET"] == "Button2") { btnSubmit_ServerClick(); }
+            if (!IsPostBack)
+            {
+                LoadDropdown();
+            }
         }
 
-        protected void Wizard1_PreRender(object sender, EventArgs e)
+        private void LoadDropdown()
         {
-            Repeater SideBarList = Wizard1.FindControl("HeaderContainer").FindControl("SideBarList") as Repeater;
-            SideBarList.DataSource = Wizard1.WizardSteps;
-            SideBarList.DataBind();
+            DataTable dt = new DataTable();
+            dt = objBAL.GetSecurityqs();
+            ddlsecurity.DataSource = dt;
+            ddlsecurity.DataTextField = "Security_qs";
+            ddlsecurity.DataBind();
+            ddlsecurity.Items.Insert(0, new ListItem("--Select--", "0"));
         }
 
         public static string CreateHash(string password)
@@ -60,28 +61,20 @@ using System.Drawing.Imaging;
             pbkdf2.IterationCount = iterations;
             return pbkdf2.GetBytes(outputBytes);
         }
-
-        protected string GetClassForWizardStep(object wizardStep)
+        protected void Button1_Click(object sender, EventArgs e)
         {
-            WizardStep step = wizardStep as WizardStep;
-
-            if (step == null)
+            if (strResult == "success")
             {
-                return "";
-            }
-            int stepIndex = Wizard1.WizardSteps.IndexOf(step);
-
-            if (stepIndex < Wizard1.ActiveStepIndex)
-            {
-                return "prevStep";
-            }
-            else if (stepIndex > Wizard1.ActiveStepIndex)
-            {
-                return "nextStep";
+                string hashvalue = CreateHash(password.Text);
+                TDStatus.InnerText = "Registerd Successfully! Proceed Next..";
+                Random generator = new Random();
+                String r = generator.Next(0, 1000000).ToString("D6");
+                objBAL.LoginVerification(username.Text, password.Text, hashvalue, roles.SelectedIndex+1, ID.Text, ddlsecurity.SelectedIndex, securityanswer.Text,Convert.ToInt32(r));
+                Response.Redirect("Login.aspx");
             }
             else
             {
-                return "currentStep";
+                TDStatus.InnerText = "Password must use a combination of these :" + Environment.NewLine + "I.Atleast 1 upper case letters (A – Z)" + Environment.NewLine + "II.Lower case letters (a – z)" + Environment.NewLine + "III.Atleast 1 number (0 – 9)" + Environment.NewLine + "IV.Atleast 1 non-alphanumeric symbol (e.g. @ ‘$%£!’)";
             }
         }
 
@@ -124,48 +117,65 @@ using System.Drawing.Imaging;
             {
                 strResult = "fail";
             }
-            
+
             return strResult;
-            
+
         }
 
-
-        protected void btnSubmit_Click(object sender,EventArgs e)
+        protected void roles_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (strResult == "success")
+            DataTable dt = new DataTable();
+            int id = roles.SelectedIndex;
+            dt = objBAL.IDgenerate(id+1);
+            string name = null;
+            try
             {
-                string hashvalue = CreateHash(password.Text);
-                //objBAL.LoginVerification(username.Text, password.Text,hashvalue);
-                TDStatus.InnerText = "Registerd Successfully! Proceed Next..";
-                username.Text = "";
-                Random generator = new Random();
-                String r = generator.Next(0, 1000000).ToString("D6");
-                Session["hiddenOTP"] = r;
-                QRgenerator(r);
-            }
-            else
-            {
-                TDStatus.InnerText = "Password must use a combination of these :" + Environment.NewLine + "I.Atleast 1 upper case letters (A – Z)" + Environment.NewLine + "II.Lower case letters (a – z)" + Environment.NewLine + "III.Atleast 1 number (0 – 9)" + Environment.NewLine + "IV.Atleast 1 non-alphanumeric symbol (e.g. @ ‘$%£!’)";
-            }
-        }
-
-        protected void QRgenerator(string code)
-        {
-            QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            QRCodeGenerator.QRCode qrCode = qrGenerator.CreateQrCode(code, QRCodeGenerator.ECCLevel.H);
-            System.Web.UI.WebControls.Image imgBarCode = new System.Web.UI.WebControls.Image();
-            imgBarCode.Height = 150;
-            imgBarCode.Width = 150;
-            using (Bitmap bitMap = qrCode.GetGraphic(20))
-            {
-                using (MemoryStream ms = new MemoryStream())
+                if (dt.Rows.Count > 0)
                 {
-                    bitMap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                    byte[] byteImage = ms.ToArray();
-                    imgBarCode.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(byteImage);
-                    Session["imgBarcode"] = imgBarCode;
+                    string substring = dt.Rows[dt.Rows.Count - 1]["ID"].ToString();
+                    if (roles.SelectedIndex == 0)
+                    {
+                        substring = substring.Substring(13);
+                        int idd = Convert.ToInt32(substring);
+                        name = "CB.EN.CSESTUD" + (idd + 1); 
+                    }
+                    else if (roles.SelectedIndex == 1)
+                    {
+                        substring = substring.Substring(13);
+                        int idd = Convert.ToInt32(substring);
+                        name = "CB.EN.CSESTAF" + (idd + 1); 
+                    }
+                    else
+                    {
+                        substring = substring.Substring(13);
+                        int idd = Convert.ToInt32(substring);
+                        name = "CB.EN.CSEADMN" + (idd + 1); 
+                    }
                 }
-                plBarCode.Controls.Add((System.Web.UI.WebControls.Image)Session["imgBarcode"]);
+                else
+                {
+                    if (roles.SelectedIndex == 0)
+                    {
+                        name = "CB.EN.CSESTUD"+100;
+                    }
+                    else if (roles.SelectedIndex == 1)
+                    {
+                        name = "CB.EN.CSESTAF"+100;
+                    }
+                    else 
+                    {
+                        name = "CB.EN.CSEADMN"+100;
+                    }
+                }
+                ID.Enabled = true;
+                ID.Text = name;
+                ID.Enabled = false;
+            }
+            catch(Exception ee)
+            {
             }
         }
+
+
     }
+}

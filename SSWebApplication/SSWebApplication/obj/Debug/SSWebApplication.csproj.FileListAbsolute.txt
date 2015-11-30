@@ -5,3 +5,4 @@ E:\GitHub\SS\SSWebApplication\SSWebApplication\bin\QRCoder.dll
 E:\GitHub\SS\SSWebApplication\SSWebApplication\obj\Debug\SSWebApplication.csprojResolveAssemblyReference.cache
 E:\GitHub\SS\SSWebApplication\SSWebApplication\obj\Debug\SSWebApplication.dll
 E:\GitHub\SS\SSWebApplication\SSWebApplication\obj\Debug\SSWebApplication.pdb
+E:\GitHub\SS\SSWebApplication\SSWebApplication\bin\AjaxControlToolkit.dll
